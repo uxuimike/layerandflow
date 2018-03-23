@@ -1,62 +1,57 @@
 import React, { Component } from 'react';
-import { inject} from 'mobx-react';
+import { inject } from 'mobx-react';
+import PropTypes from 'prop-types';
 
 import LandingPage from './pages/LandingPage';
+import LNF from './lnf';
 
 @inject('styles')
 export default class Layout extends Component {
+  static propTypes = {
+    styles: PropTypes.object.isRequired,
+  }
 
   constructor(props) {
     super(props);
     this.onResize = this.onResize.bind(this);
-    this.onScroll = this.onScroll.bind(this);
   }
 
   componentDidMount() {
     window.addEventListener('resize', this.onResize);
-    window.addEventListener("scroll", this.onScroll);
+    window.addEventListener('scroll', this.onScroll);
     this.onResize();
-    this.onScroll();
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.onResize);
-    window.removeEventListener("scroll", this.onScroll);
+    window.removeEventListener('scroll', this.onScroll);
   }
 
-  onResize(){
-    var sf = 1;
-    var cw = window.innerWidth;
-    var ch = window.innerHeight;
+  onResize() {
+    let sf = 1;
+    const cw = window.innerWidth;
+    const ch = window.innerHeight;
 
     if (cw > ch) {
-      sf = (ch)/640;
-    }else {
-      sf = (cw)/640;
+      sf = (ch) / 640;
+    } else {
+      sf = (cw) / 640;
     }
 
     if (sf > 1) {
       sf = 1;
     }
-
-    document.documentElement.style.fontSize = sf + 'px';
-
+    document.documentElement.style.fontSize = `${sf}px`;
+    this.props.styles.setWidth(cw);
   }
 
-  onScroll(){
-    this.sp = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
-    //Set how often we want onScroll to dispatch
-    if (this.sp > this.props.scrollPos + 10 || this.sp < this.props.scrollPos - 10) {
-      //this.props.dispatch(viewActs.setScroll(this.sp));
-    }
-  }
-
-  render(){
-    return(
+  render() {
+    return (
       <div className="App" >
         <LandingPage />
+        <LNF top={500} left={500} zIndex={3} />
       </div>
 
-    )
+    );
   }
 }
