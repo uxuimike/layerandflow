@@ -7,7 +7,7 @@ import { StyleSheet, css } from 'aphrodite/no-important';
 import { init, update } from '../lnf/LNF';
 
 @inject('styles')
-export default class LnF extends Component {
+export default class Other extends Component {
   static propTypes = {
     top: PropTypes.number,
     left: PropTypes.number,
@@ -33,7 +33,7 @@ export default class LnF extends Component {
   }
 
   componentDidMount() {
-
+    init(this.node);
   }
 
   componentDidUpdate() {
@@ -72,11 +72,12 @@ export default class LnF extends Component {
     return (
       <div
         ref={(node) => { this.node = node; }}
-        className={`LNF ${css(aStyle.lnf)}`}
+        className={css(aStyle.lnf)}
         draggable
         onDrop={this.onDrop}
         onDragOver={(e) => { e.preventDefault(); }}
       >
+        JSB
         <p>Uid:{this.state.uid}</p>
         <p>Width:{this.state.width}</p>
         <p>Updates:{this.state.count}</p>

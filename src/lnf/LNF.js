@@ -1,26 +1,27 @@
-// module "my-module.js"
-let count = 0;
-let nodes = [];
+const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
-const init = (uid) => {
-  nodes.push(uid);
-  return uid;
+let count = 0;
+const nodes = [];
+
+const init = (node) => {
+  const elements = document.getElementsByClassName('LNF');
+  for (var i = 0; i < elements.length; i++) {
+    console.log(elements[i].parentNode);
+  }
+  console.log(elements);
 };
 
 
-const update = (uid) => {
-  count = count + 1;
-  console.log('Count it out', uid, count, nodes);
-  const css = 'h1 { background: red; }';
+const update = () => {
+  //count = count + 1;
+  //console.log('Count it out', uid, count, nodes);
+};
+
+const updateCSS = (css) => {
   const head = document.head || document.getElementsByTagName('head')[0];
   const style = document.createElement('style');
   style.type = 'text/css';
-  if (style.styleSheet) {
-    style.styleSheet.cssText = css;
-  } else {
-    style.appendChild(document.createTextNode(css));
-  }
-  head.appendChild(style);
+  style.styleSheet.cssText = css;
 };
 
 export { init, update };

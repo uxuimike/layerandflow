@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import LandingPage from './pages/LandingPage';
 import LNF from './lnf';
 
+import { init } from '../lnf/LNF';
+
 @inject('styles')
 export default class Layout extends Component {
   static propTypes = {
@@ -20,6 +22,7 @@ export default class Layout extends Component {
     window.addEventListener('resize', this.onResize);
     window.addEventListener('scroll', this.onScroll);
     this.onResize();
+    init();
   }
 
   componentWillUnmount() {
@@ -49,7 +52,7 @@ export default class Layout extends Component {
     return (
       <div className="App" >
         <LandingPage />
-        <LNF top={500} left={500} zIndex={3} />
+        <LNF top={500} left={500} zIndex={3} >E</LNF>
       </div>
 
     );
