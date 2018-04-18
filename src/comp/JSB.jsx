@@ -72,7 +72,6 @@ export default class Other extends Component {
     return (
       <div
         ref={(node) => { this.node = node; }}
-        className={css(aStyle.lnf)}
         draggable
         onDrop={this.onDrop}
         onDragOver={(e) => { e.preventDefault(); }}

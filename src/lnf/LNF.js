@@ -1,27 +1,33 @@
 const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 
-let count = 0;
+let needsInit = true;
+let styleLNF = null;
 const nodes = [];
 
-const init = (node) => {
-  const elements = document.getElementsByClassName('LNF');
-  for (var i = 0; i < elements.length; i++) {
-    console.log(elements[i].parentNode);
+const init = () => {
+  // Create styleSheet
+  if (needsInit) {
+    needsInit = false;
+    const head = document.head || document.getElementsByTagName('head')[0];
+    styleLNF = document.createElement('style');
+    styleLNF.type = 'text/css';
+    styleLNF.title = 'LayerandFlow';
+    head.appendChild(styleLNF);
   }
-  console.log(elements);
 };
 
-
-const update = () => {
-  //count = count + 1;
-  //console.log('Count it out', uid, count, nodes);
+const lnf = () => {
+  init();
+  return 'LAYERANDFLOW';
 };
 
-const updateCSS = (css) => {
-  const head = document.head || document.getElementsByTagName('head')[0];
-  const style = document.createElement('style');
-  style.type = 'text/css';
-  style.styleSheet.cssText = css;
+const update = (css) => {
+  console.log("Lets Ride");
+  const ocss = 'h1 { background: blue; } h2 {color: red}';
+  if (styleLNF.firstChild) {
+    styleLNF.removeChild(styleLNF.firstChild);
+  }
+  styleLNF.appendChild(document.createTextNode(ocss));
 };
 
-export { init, update };
+export { init, lnf, update };

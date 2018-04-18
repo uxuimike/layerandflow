@@ -4,7 +4,7 @@ import { inject } from 'mobx-react';
 import uid from 'uid';
 import { StyleSheet, css } from 'aphrodite/no-important';
 
-import { init, update } from '../lnf/LNF';
+import { init, lnf, update } from '../lnf/LNF';
 
 @inject('styles')
 export default class LnF extends Component {
@@ -12,7 +12,7 @@ export default class LnF extends Component {
     top: PropTypes.number,
     left: PropTypes.number,
     zIndex: PropTypes.number,
-    children: PropTypes.object,
+    children: PropTypes.oneOfType([PropTypes.array, PropTypes.object, PropTypes.string]),
   }
 
   static defaultProps = {
@@ -33,21 +33,10 @@ export default class LnF extends Component {
   }
 
   componentDidMount() {
-
-  }
-
-  componentDidUpdate() {
-    update(this.state.uid);
-    if (this.node.offsetWidth !== this.state.width) {
-      this.setState({
-        count: this.state.count + 1,
-        width: this.node.offsetWidth,
-      })
-    }
+    init();
   }
 
   onDrop() {
-    console.log('Dropped Into', this.state.uid);
     update(this.state.uid);
   }
 
@@ -72,13 +61,13 @@ export default class LnF extends Component {
     return (
       <div
         ref={(node) => { this.node = node; }}
-        className={`LNF ${css(aStyle.lnf)}`}
+        className={`${lnf()} ${css(aStyle.lnf)}`}
         draggable
         onDrop={this.onDrop}
         onDragOver={(e) => { e.preventDefault(); }}
       >
-        <p>Uid:{this.state.uid}</p>
-        <p>Width:{this.state.width}</p>
+        <h1>Uid:{this.state.uid}</h1>
+        <h2>Width:{this.state.width}</h2>
         <p>Updates:{this.state.count}</p>
         {this.props.children}
       </div>
