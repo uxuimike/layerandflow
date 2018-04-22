@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { inject } from 'mobx-react';
 import uid from 'uid';
-import { StyleSheet, css } from 'aphrodite/no-important';
 
 import { init, update } from '../lnf/LNF';
 
@@ -52,23 +51,6 @@ export default class Other extends Component {
   }
 
   render() {
-    const aStyle = StyleSheet.create({
-      lnf: {
-        position: 'absolute',
-        boxSizing: 'border-box',
-        border: '2px solid rgba(0, 102, 0, 0.5)',
-        top: `${this.props.top}px`,
-        left: `${this.props.left}px`,
-        height: '60px',
-        zIndex: this.props.zIndex,
-        margin: '0 0 0 0',
-        padding: '0px',
-        color: '#808080',
-        backgroundColor: 'rgba(0, 204, 204, 1)',
-        fontSize: '24px',
-      },
-    });
-
     return (
       <div
         ref={(node) => { this.node = node; }}

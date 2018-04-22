@@ -12,6 +12,8 @@ export default class LnF extends Component {
     top: PropTypes.number,
     left: PropTypes.number,
     zIndex: PropTypes.number,
+    name: PropTypes.string.isRequired,
+    pin: PropTypes.string.isRequired,
     children: PropTypes.oneOfType([PropTypes.array, PropTypes.object, PropTypes.string]),
   }
 
@@ -61,10 +63,17 @@ export default class LnF extends Component {
     return (
       <div
         ref={(node) => { this.node = node; }}
-        className={`${lnf()} ${css(aStyle.lnf)}`}
+        className={css(aStyle.lnf)}
         draggable
         onDrop={this.onDrop}
         onDragOver={(e) => { e.preventDefault(); }}
+        id={
+          lnf({
+            id: this.props.name,
+            top: { pin: this.props.pin, point: 'bottom', offset: '20px' },
+            left: { pin: this.props.pin, point: 'right', offset: '20px' },
+          })
+        }
       >
         <h1>Uid:{this.state.uid}</h1>
         <h2>Width:{this.state.width}</h2>

@@ -3,7 +3,6 @@ import { inject } from 'mobx-react';
 import PropTypes from 'prop-types';
 
 import LandingPage from './pages/LandingPage';
-import LNF from './lnf';
 
 import { init } from '../lnf/LNF';
 
@@ -52,7 +51,6 @@ export default class Layout extends Component {
     return (
       <div className="App" >
         <LandingPage />
-        <LNF top={500} left={500} zIndex={3} >E</LNF>
       </div>
 
     );
