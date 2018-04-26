@@ -3,7 +3,7 @@ const uid = require('uid');
 
 let needsInit = true;
 let styleLNF = null;
-const pins = {};
+const pins = [];
 
 const init = () => {
   // Create styleSheet
@@ -26,67 +26,71 @@ const updateTest = () => {
   styleLNF.appendChild(document.createTextNode(ocss));
 };
 
+const calculatePin = () => {
+  return 88;
+};
+
 const update = () => {
   console.log('Update');
-  Object.keys(pins).forEach((key) => {
-    Object.keys(pins[key]).forEach((pinKey) => {
-      let thisPin = {};
-      let thisPinPoint = {};
-      let linkedPin = {};
-      try {
-        thisPin = pins[key];
-        thisPinPoint = thisPin[pinKey];
-        linkedPin = pins[thisPinPoint.pin];
-        if (linkedPin[pinKey]) {
-          console.log('The value', key, pinKey, linkedPin[pinKey].value);
-          // thisPinPoint.value = linkedPin[pinKey].value;
+  // Loop through each pin's anchor points
+  pins.forEach((pin) => {
+    pin.anchorPoints.forEach((anchorPoint) => {
+      const pinTo = pins.find(p1 => p1.id === anchorPoint.pinTo);
+      // If we find the pin it is pinned to, check to see if it has a
+      // value for the pinned to anchor point refrenced
+      if (pinTo) {
+        const pinToAnchorPoint = pinTo.anchorPoints.find(p2 =>
+          p2.anchorPoint === anchorPoint.pinToAnchorPoint);
+        // If pinToAnchorPoint has value assign it to anchorPoint value + offset
+        // otherwise calculate it
+        if (pinToAnchorPoint) {
+          anchorPoint.value = pinToAnchorPoint.value;
+        } else {
+          anchorPoint.value = calculatePin();
         }
-      } catch (error) {
-        thisPinPoint.value = '0px';
-        console.log(key);
       }
     });
   });
-  console.log('The pins', pins);
+  console.log(pins);
 };
-
-const calculatePin = () => {
-
-}
 
 const lnf = (obj) => {
   init();
-  let key = '';
+  let id = '';
   const formatedObj = {};
   // Set Element ID
   if (!('id' in obj)) {
     console.error('LNF elements require an id to be supplied');
-    key = uid();
+    id = uid();
   } else {
-    key = obj.id;
+    id = obj.id;
   }
+  formatedObj.id = id;
 
   // TODO For Object.keys and vlidate in fucntion
+  formatedObj.anchorPoints = [];
   // Set Top
   if (typeof obj.top === 'object') {
-    formatedObj.top = {
-      pin: obj.top.pin,
-      point: obj.top.point,
+    formatedObj.anchorPoints.push({
+      anchorPoint: 'top',
+      pinTo: obj.top.pinTo,
+      pinToAnchorPoint: obj.top.pinToAnchorPoint,
       offset: obj.top.offset,
       value: null,
-    };
+    });
   }
 
   // Set Right
   if (typeof obj.left === 'object') {
-    formatedObj.left = {
-      pin: obj.left.pin,
-      point: obj.left.point,
+    formatedObj.anchorPoints.push({
+      anchorPoint: 'left',
+      pinTo: obj.left.pinTo,
+      pinToAnchorPoint: obj.left.pinToAnchorPoint,
       offset: obj.left.offset,
       value: null,
-    };
+    });
   }
-  pins[key] = formatedObj;
+  pins.push(formatedObj);
   update();
   return obj.id;
 };

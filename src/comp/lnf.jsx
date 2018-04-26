@@ -70,8 +70,8 @@ export default class LnF extends Component {
         id={
           lnf({
             id: this.props.name,
-            top: { pin: this.props.pin, point: 'bottom', offset: '20px' },
-            left: { pin: this.props.pin, point: 'right', offset: '20px' },
+            top: { pinTo: this.props.pin, pinToAnchorPoint: 'bottom', offset: '20px' },
+            left: { pinTo: this.props.pin, pinToAnchorPoint: 'right', offset: '20px' },
           })
         }
       >
