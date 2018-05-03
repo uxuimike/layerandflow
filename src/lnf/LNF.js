@@ -26,10 +26,6 @@ const updateTest = () => {
   styleLNF.appendChild(document.createTextNode(ocss));
 };
 
-const calculatePin = () => {
-  return 88;
-};
-
 const update = () => {
   console.log('Update');
   // Loop through each pin's anchor points
@@ -45,8 +41,6 @@ const update = () => {
         // otherwise calculate it
         if (pinToAnchorPoint) {
           anchorPoint.value = pinToAnchorPoint.value;
-        } else {
-          anchorPoint.value = calculatePin();
         }
       }
     });
@@ -70,7 +64,7 @@ const lnf = (obj) => {
   // TODO For Object.keys and vlidate in fucntion
   formatedObj.anchorPoints = [];
   // Set Top
-  if (typeof obj.top === 'object') {
+  if (typeof obj.top === 'objects') {
     formatedObj.anchorPoints.push({
       anchorPoint: 'top',
       pinTo: obj.top.pinTo,
@@ -78,6 +72,8 @@ const lnf = (obj) => {
       offset: obj.top.offset,
       value: null,
     });
+  } else if (obj.width) {
+    console.log(obj.width);
   }
 
   // Set Right
@@ -92,7 +88,7 @@ const lnf = (obj) => {
   }
   pins.push(formatedObj);
   update();
-  return obj.id;
+  return String(obj.id);
 };
 
 

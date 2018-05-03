@@ -36,6 +36,11 @@ export default class LnF extends Component {
 
   componentDidMount() {
     init();
+    lnf({
+      id: this.props.name,
+      top: { pinTo: this.props.pin, pinToAnchorPoint: 'bottom', offset: '20px' },
+      left: { pinTo: this.props.pin, pinToAnchorPoint: 'right', offset: '20px' },
+    });
   }
 
   onDrop() {
@@ -72,6 +77,7 @@ export default class LnF extends Component {
             id: this.props.name,
             top: { pinTo: this.props.pin, pinToAnchorPoint: 'bottom', offset: '20px' },
             left: { pinTo: this.props.pin, pinToAnchorPoint: 'right', offset: '20px' },
+            width: '279px',
           })
         }
       >
