@@ -4,7 +4,7 @@ import { inject } from 'mobx-react';
 import uid from 'uid';
 import { StyleSheet, css } from 'aphrodite/no-important';
 
-import { init, lnf, update } from '../lnf/LNF';
+import { lnf } from '../lnf/LNF';
 
 @inject('styles')
 export default class LnF extends Component {
@@ -13,7 +13,7 @@ export default class LnF extends Component {
     left: PropTypes.number,
     zIndex: PropTypes.number,
     name: PropTypes.string.isRequired,
-    pin: PropTypes.string.isRequired,
+    pin: PropTypes.string,
     children: PropTypes.oneOfType([PropTypes.array, PropTypes.object, PropTypes.string]),
   }
 
@@ -22,6 +22,7 @@ export default class LnF extends Component {
     left: 0,
     zIndex: 0,
     children: null,
+    pin: null,
   }
 
   constructor(props) {
@@ -31,20 +32,6 @@ export default class LnF extends Component {
       width: 0,
       count: 0,
     };
-    this.onDrop = this.onDrop.bind(this);
-  }
-
-  componentDidMount() {
-    init();
-    lnf({
-      id: this.props.name,
-      top: { pinTo: this.props.pin, pinToAnchorPoint: 'bottom', offset: '20px' },
-      left: { pinTo: this.props.pin, pinToAnchorPoint: 'right', offset: '20px' },
-    });
-  }
-
-  onDrop() {
-    update(this.state.uid);
   }
 
   render() {
@@ -75,9 +62,10 @@ export default class LnF extends Component {
         id={
           lnf({
             id: this.props.name,
-            top: { pinTo: this.props.pin, pinToAnchorPoint: 'bottom', offset: '20px' },
-            left: { pinTo: this.props.pin, pinToAnchorPoint: 'right', offset: '20px' },
-            width: '279px',
+            top: { pinTo: this.props.pin, pinToPoint: 'bottom', offset: '20' },
+            left: { pinTo: this.props.pin, pinToPoint: 'right', offset: '20' },
+            width: '150',
+            height: '120',
           })
         }
       >

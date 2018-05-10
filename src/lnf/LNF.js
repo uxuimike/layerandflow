@@ -2,8 +2,43 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 const uid = require('uid');
 
 let needsInit = true;
+let isUpdating = false;
 let styleLNF = null;
-const pins = [];
+let cnt = 0;
+const pins = {};
+
+const update = () => {
+  const theKeys = Object.keys(pins);
+  let anyUndefined = false;
+  if (theKeys.length === 0) {
+    setTimeout(update, 1);
+  }
+  for (let i = 0; i < theKeys.length; i += 1) {
+    // console.log('Update', theKeys.length);
+    Object.keys(pins).forEach((pin, index) => { // eslint-disable-line no-loop-func
+      // console.log(needsUpdate,pin, index);
+      // Get obj from pins Object
+      const obj = pins[pin];
+      // If obj does not have a value
+      if (!obj.value) {
+        // Concatinate to get look up key
+        const pinPoint = `${obj.pinTo}${obj.pinToPoint}`;
+        if (!obj.pinTo) {
+          obj.value = obj.offset;
+          // If the object obj is pinned to exsists
+        } else if (pins[pinPoint] && pins[pinPoint].value) {
+          // Assign the value plus the offset
+          obj.value = Number(pins[pinPoint].value) + Number(obj.offset);
+        } else {
+          anyUndefined = true;
+          obj.value = null;
+        }
+      }
+    });
+    cnt += 1;
+    console.log(pins, cnt);
+  }
+};
 
 const init = () => {
   // Create styleSheet
@@ -14,6 +49,7 @@ const init = () => {
     styleLNF.type = 'text/css';
     styleLNF.title = 'LayerandFlow';
     head.appendChild(styleLNF);
+    update();
   }
 };
 
@@ -26,32 +62,10 @@ const updateTest = () => {
   styleLNF.appendChild(document.createTextNode(ocss));
 };
 
-const update = () => {
-  console.log('Update');
-  // Loop through each pin's anchor points
-  pins.forEach((pin) => {
-    pin.anchorPoints.forEach((anchorPoint) => {
-      const pinTo = pins.find(p1 => p1.id === anchorPoint.pinTo);
-      // If we find the pin it is pinned to, check to see if it has a
-      // value for the pinned to anchor point refrenced
-      if (pinTo) {
-        const pinToAnchorPoint = pinTo.anchorPoints.find(p2 =>
-          p2.anchorPoint === anchorPoint.pinToAnchorPoint);
-        // If pinToAnchorPoint has value assign it to anchorPoint value + offset
-        // otherwise calculate it
-        if (pinToAnchorPoint) {
-          anchorPoint.value = pinToAnchorPoint.value;
-        }
-      }
-    });
-  });
-  console.log(pins);
-};
-
 const lnf = (obj) => {
   init();
   let id = '';
-  const formatedObj = {};
+
   // Set Element ID
   if (!('id' in obj)) {
     console.error('LNF elements require an id to be supplied');
@@ -59,35 +73,54 @@ const lnf = (obj) => {
   } else {
     id = obj.id;
   }
-  formatedObj.id = id;
 
-  // TODO For Object.keys and vlidate in fucntion
-  formatedObj.anchorPoints = [];
   // Set Top
-  if (typeof obj.top === 'objects') {
-    formatedObj.anchorPoints.push({
-      anchorPoint: 'top',
+  if (typeof obj.top === 'object') {
+    pins[`${id}top`] = {
       pinTo: obj.top.pinTo,
-      pinToAnchorPoint: obj.top.pinToAnchorPoint,
+      pinToPoint: obj.top.pinToPoint,
       offset: obj.top.offset,
-      value: null,
-    });
-  } else if (obj.width) {
-    console.log(obj.width);
+    };
+  }
+
+  // Set Left
+  if (typeof obj.left === 'object') {
+    pins[`${id}left`] = {
+      pinTo: obj.left.pinTo,
+      pinToPoint: obj.left.pinToPoint,
+      offset: obj.left.offset,
+    };
+  }
+
+  // Set Bottom
+  if (typeof obj.bottom === 'object') {
+    pins[`${id}bottom`] = {
+      pinTo: obj.bottom.pinTo,
+      pinToPoint: obj.bottom.pinToPoint,
+      offset: obj.bottom.offset,
+    };
+  } else {
+    pins[`${id}bottom`] = {
+      pinTo: id,
+      pinToPoint: 'top',
+      offset: obj.height,
+    };
   }
 
   // Set Right
-  if (typeof obj.left === 'object') {
-    formatedObj.anchorPoints.push({
-      anchorPoint: 'left',
-      pinTo: obj.left.pinTo,
-      pinToAnchorPoint: obj.left.pinToAnchorPoint,
-      offset: obj.left.offset,
-      value: null,
-    });
+  if (typeof obj.right === 'object') {
+    pins[`${id}right`] = {
+      pinTo: `${obj.right.pinTo}${obj.right.pinToPoint}`,
+      offset: obj.right.offset,
+    };
+  } else {
+    pins[`${id}right`] = {
+      pinTo: id,
+      pinToPoint: 'left',
+      offset: obj.width,
+    };
   }
-  pins.push(formatedObj);
-  update();
+
   return String(obj.id);
 };
 

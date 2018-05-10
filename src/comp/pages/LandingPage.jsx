@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, css } from 'aphrodite/no-important';
 
-import LNF from '../lnf';
+import { init } from '../../lnf/LNF';
 import Dummy from '../Dummy';
+import LNF from '../lnf';
 
 export default class LandingPage extends Component {
   constructor(props) {
@@ -11,6 +12,10 @@ export default class LandingPage extends Component {
       input: '',
     };
     this.onInput = this.onInput.bind(this);
+  }
+
+  componentDidMount() {
+    init();
   }
 
   onInput(e) {
@@ -36,15 +41,10 @@ export default class LandingPage extends Component {
 
     return (
       <div className={css(aStyle.comp)} >
-        <LNF top={100} left={50} zIndex={6} name="A" pin="none">A</LNF>
-        <LNF top={200} left={100} zIndex={4} name="B" pin="A">
-          B
-          <Dummy text={this.state.input} />
-        </LNF>
-        <LNF top={300} left={150} zIndex={1} name="C" pin="B">
-          C
-        </LNF>
-        <LNF top={400} left={200} zIndex={1} name="D" pin="C"> D</LNF>
+        <LNF top={400} left={200} zIndex={1} name="D" pin="C" />
+        <LNF top={300} left={150} zIndex={1} name="C" pin="B" />
+        <LNF top={200} left={100} zIndex={4} name="B" pin="A" />
+        <LNF top={100} left={50} zIndex={6} name="A" />
         Seemed to work?
         <input onChange={this.onInput} />
       </div>
