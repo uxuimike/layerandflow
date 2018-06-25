@@ -69,9 +69,6 @@ export default class LnF extends Component {
           })
         }
       >
-        <h1>Uid:{this.state.uid}</h1>
-        <h2>Width:{this.state.width}</h2>
-        <p>Updates:{this.state.count}</p>
         {this.props.children}
       </div>
     );

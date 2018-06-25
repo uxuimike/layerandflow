@@ -2,20 +2,19 @@ const ResizeSensor = require('css-element-queries/src/ResizeSensor');
 const uid = require('uid');
 
 let needsInit = true;
-let isUpdating = false;
 let styleLNF = null;
+let styleString = '';
 let cnt = 0;
 const pins = {};
 
 const update = () => {
   const theKeys = Object.keys(pins);
-  let anyUndefined = false;
   if (theKeys.length === 0) {
     setTimeout(update, 1);
   }
   for (let i = 0; i < theKeys.length; i += 1) {
     // console.log('Update', theKeys.length);
-    Object.keys(pins).forEach((pin, index) => { // eslint-disable-line no-loop-func
+    Object.keys(pins).forEach((pin) => { // eslint-disable-line no-loop-func
       // console.log(needsUpdate,pin, index);
       // Get obj from pins Object
       const obj = pins[pin];
@@ -30,7 +29,6 @@ const update = () => {
           // Assign the value plus the offset
           obj.value = Number(pins[pinPoint].value) + Number(obj.offset);
         } else {
-          anyUndefined = true;
           obj.value = null;
         }
       }
@@ -38,6 +36,7 @@ const update = () => {
     cnt += 1;
     console.log(pins, cnt);
   }
+  updateCss();
 };
 
 const init = () => {
@@ -53,13 +52,21 @@ const init = () => {
   }
 };
 
-const updateTest = () => {
+const updateCss = () => {
   console.log("Lets Ride");
   const ocss = 'h1 { background: blue; } h2 {color: red}';
   if (styleLNF.firstChild) {
     styleLNF.removeChild(styleLNF.firstChild);
   }
   styleLNF.appendChild(document.createTextNode(ocss));
+  console.log(pins.length);
+  const theKeys = Object.keys(pins);
+  if (theKeys.length === 0) {
+    setTimeout(update, 1);
+  }
+  for (let i = 0; i < theKeys.length; i += 1) {
+    console.log(theKeys[i]);
+  }
 };
 
 const lnf = (obj) => {
@@ -77,6 +84,8 @@ const lnf = (obj) => {
   // Set Top
   if (typeof obj.top === 'object') {
     pins[`${id}top`] = {
+      id,
+      point: 'top',
       pinTo: obj.top.pinTo,
       pinToPoint: obj.top.pinToPoint,
       offset: obj.top.offset,
@@ -86,6 +95,8 @@ const lnf = (obj) => {
   // Set Left
   if (typeof obj.left === 'object') {
     pins[`${id}left`] = {
+      id,
+      point: 'left',
       pinTo: obj.left.pinTo,
       pinToPoint: obj.left.pinToPoint,
       offset: obj.left.offset,
@@ -95,12 +106,16 @@ const lnf = (obj) => {
   // Set Bottom
   if (typeof obj.bottom === 'object') {
     pins[`${id}bottom`] = {
+      id,
+      point: 'bottom',
       pinTo: obj.bottom.pinTo,
       pinToPoint: obj.bottom.pinToPoint,
       offset: obj.bottom.offset,
     };
   } else {
     pins[`${id}bottom`] = {
+      id,
+      point: 'bottom',
       pinTo: id,
       pinToPoint: 'top',
       offset: obj.height,
@@ -110,11 +125,15 @@ const lnf = (obj) => {
   // Set Right
   if (typeof obj.right === 'object') {
     pins[`${id}right`] = {
+      id,
+      point: 'right',
       pinTo: `${obj.right.pinTo}${obj.right.pinToPoint}`,
       offset: obj.right.offset,
     };
   } else {
     pins[`${id}right`] = {
+      id,
+      point: 'right',
       pinTo: id,
       pinToPoint: 'left',
       offset: obj.width,
